@@ -1,0 +1,25 @@
+getSelectionCoordinates(_xs,_ys);
+ms = (_ys[1]-_ys[0])/(_xs[1]-_xs[0]);
+xs = (_xs[0]+_xs[1])/2;
+ys = (_ys[0]+_ys[1])/2;
+lxs = _xs[1]-_xs[0];
+lys = _ys[1]-_ys[0];
+xpc = xs;
+ypc = ys;
+mp = -1/ms;
+roiManager("reset");
+roiManager("show all");
+roiManager("deselect");
+makeLine(xs,ys,xpc,ypc); roiManager("add"); roiManager("select",0);
+done = false;
+
+while (!done) {
+	getCursorLoc(xc,yc,zc,flags);
+	xpc = (ys-yc-mp*xs+ms*xc)/(ms-mp);
+	ypc = mp*(xpc-xs)+ys;
+	makeLine(xs,ys,xpc,ypc); roiManager("update");
+	if (flags==16) done=true;
+}
+
+makeLine(xs,ys,xpc,ypc); roiManager("update");
+roiManager("select",0); roiManager("measure");
